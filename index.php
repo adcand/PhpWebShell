@@ -10,12 +10,6 @@ if (!empty($_POST["cmd"])) {
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400&display=swap"
-    />
     <title>Yay!</title>
     <style>
       :root {
@@ -51,7 +45,7 @@ if (!empty($_POST["cmd"])) {
       }
 
       .shell {
-        font-family: "Noto Sans JP", sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--bg--clr);
       }
 
